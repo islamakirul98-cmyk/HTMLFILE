@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYZ Sports Live</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">Live Sports Prototype</p>
+                <h1>XYZ Sports Live Watch</h1>
+            </div>
+            <div class="topbar-badges">
+                <span class="badge badge-live">LIVE</span>
+                <span class="badge" id="streamStatus">Awaiting stream</span>
+            </div>
+        </header>
+
+        <section class="ticker-bar" aria-label="Live update ticker">
+            <div class="ticker-track" id="tickerTrack">
+                <span>Breaking: title race pressure rising</span>
+                <span>Live analysis: momentum shifted after the last attacking sequence</span>
+                <span>Studio note: crowd volume trending sharply upward</span>
+                <span>Watch room active: fan reactions updating in real time</span>
+                <span>Breaking: title race pressure rising</span>
+                <span>Live analysis: momentum shifted after the last attacking sequence</span>
+            </div>
+        </section>
+
+        <main class="content-grid">
+            <section class="player-panel">
+                <div class="player-meta">
+                    <div>
+                        <p class="section-label">Now Streaming</p>
+                        <h2>Matchday Center</h2>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <span class="stat-label">Watching now</span>
+                            <strong id="viewerCount">18,421</strong>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Chat activity</span>
+                            <strong id="commentCount">126</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="match-strip" aria-label="Live match summary">
+                    <div class="team-block">
+                        <span class="team-tag">Home</span>
+                        <strong>Falcons FC</strong>
+                    </div>
+                    <div class="score-block">
+                        <span class="scoreline">2 : 1</span>
+                        <span class="clock-pill" id="liveClock">67:12</span>
+                    </div>
+                    <div class="team-block align-right">
+                        <span class="team-tag">Away</span>
+                        <strong>Titans SC</strong>
+                    </div>
+                </section>
+
+                <section class="pulse-grid" aria-label="Match pulse">
+                    <article class="pulse-card">
+                        <span class="pulse-label">Possession Swing</span>
+                        <strong id="possessionValue">54% Home</strong>
+                    </article>
+                    <article class="pulse-card">
+                        <span class="pulse-label">Attack Pressure</span>
+                        <strong id="pressureValue">High</strong>
+                    </article>
+                    <article class="pulse-card">
+                        <span class="pulse-label">Watch Party Mood</span>
+                        <strong id="moodValue">Electric</strong>
+                    </article>
+                </section>
+
+                <div class="video-frame">
+                    <div class="video-overlay">
+                        <span class="badge badge-live">On Air</span>
+                        <span class="pulse-dot"></span>
+                    </div>
+                    <video id="livePlayer" controls autoplay muted playsinline></video>
+                </div>
+
+                <div class="stream-notice" id="streamNotice" aria-live="polite">
+                    Stream status will appear here if the browser cannot start playback.
+                </div>
+
+                <div class="stream-notes">
+                    <p><strong>Supported prototype sources:</strong> direct MP4/WebM links and HLS <code>.m3u8</code> streams.</p>
+                    <p>This page uses simulated viewer count and chat to mimic a live sports watch room.</p>
+                </div>
+            </section>
+
+            <aside class="sidebar-panel">
+                <section class="sidebar-card spotlight-card">
+                    <p class="section-label">Live Feed</p>
+                    <h3>Fan Reactions</h3>
+                    <p class="muted-copy">Auto-generated comments update continuously to make the prototype feel live during demos.</p>
+                </section>
+
+                <section class="sidebar-card trend-card">
+                    <p class="section-label">Pulse Board</p>
+                    <h3>What Is Moving</h3>
+                    <div class="trend-list">
+                        <div class="trend-row">
+                            <span>Viewer spike</span>
+                            <strong id="trendViewers">+3.2%</strong>
+                        </div>
+                        <div class="trend-row">
+                            <span>Chat velocity</span>
+                            <strong id="trendChat">Fast</strong>
+                        </div>
+                        <div class="trend-row">
+                            <span>Moment forecast</span>
+                            <strong id="trendMoment">Goal threat</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sidebar-card comments-card">
+                    <div class="comments-header">
+                        <h3>Live Chat</h3>
+                        <span class="chat-indicator">Updating</span>
+                    </div>
+                    <div class="comments-list" id="commentsList"></div>
+                </section>
+            </aside>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="script.js"></script>
+</body>
+</html>
