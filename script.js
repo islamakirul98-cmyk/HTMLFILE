@@ -1,4 +1,4 @@
-const STREAM_URL = "https://allinonereborn.online/mix.m3u8?id=276917";
+const STREAM_URL = "https://ndtvindiaelemarchana.akamaized.net/hls/live/2003679/ndtvindia/master.m3u8";
 
 const player = document.getElementById("livePlayer");
 const streamStatus = document.getElementById("streamStatus");
