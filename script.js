@@ -1,4 +1,4 @@
-const STREAM_URL = "https://amg01117-amg01117c1-amgplt0029.playout.now3.amagi.tv/playlist/amg01117-amg01117c1-amgplt0029/playlist.m3u8";
+const STREAM_URL = "http://116.90.120.151:8000/play/a0je/index.m3u8";
 
 const player = document.getElementById("livePlayer");
 const streamStatus = document.getElementById("streamStatus");
