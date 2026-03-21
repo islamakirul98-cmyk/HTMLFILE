@@ -1,4 +1,4 @@
-const STREAM_URL = "http://116.90.120.151:8000/play/a0je/index.m3u8";
+const STREAM_URL = "https://allinonereborn.online/mix.m3u8?id=276917";
 
 const player = document.getElementById("livePlayer");
 const streamStatus = document.getElementById("streamStatus");
