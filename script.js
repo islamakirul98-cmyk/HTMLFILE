@@ -1,4 +1,4 @@
-const STREAM_URL = "https://sharing.nexgtv.com/share?code=LIV805&type=livetv&cid=565c8c878c86ba151d29b689";
+const STREAM_URL = "http://116.90.120.151:8000/play/a0je/index.m3u8";
 
 const player = document.getElementById("livePlayer");
 const streamStatus = document.getElementById("streamStatus");
