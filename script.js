@@ -1,4 +1,4 @@
-const STREAM_URL = "https://cdnb4u.wiseplayout.com/B4U_Music/master.m3u8";
+const STREAM_URL = "https://cdn-3.pishow.tv/live/6/master.m3u8";
 
 const player = document.getElementById("livePlayer");
 const streamStatus = document.getElementById("streamStatus");
