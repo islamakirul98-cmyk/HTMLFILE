@@ -1,5 +1,5 @@
-const STREAM_URL = "https://aajtakhdlive-amd.akamaized.net/hls/live/2014415/aajtakhd/aajtakhdlive/live_1080p/chunks.m3u8";
-const STREAM_URL = "https://aajtakhdlive-amd.akamaized.net/hls/live/2014415/aajtakhd/aajtakhdlive/live_1080p/chunks.m3u8";
+const STREAM_URL = "http://116.90.120.151:8000/play/a0je/index.m3u8";
+
 const player = document.getElementById("livePlayer");
 const streamStatus = document.getElementById("streamStatus");
 const streamNotice = document.getElementById("streamNotice");
