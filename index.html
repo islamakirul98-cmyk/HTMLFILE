@@ -177,16 +177,13 @@
 </head>
 <body>
 
-    <!-- 1. INTRO VIDEO OVERLAY -->
     <div id="intro-overlay">
-        <!-- '1000045993.mp4' file ka direct reference -->
         <video id="intro-video" autoplay muted playsinline preload="auto">
-            <source src="1000045993.mp4" type="video/mp4">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-laser-lights-background-32120-large.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
 
-    <!-- 2. MAIN WEBSITE CONTENT -->
     <header>
         <div class="logo">Bluestar <span>Sport</span></div>
         <nav>
@@ -227,32 +224,23 @@
         <p>&copy; 2026 Bluestar Sport. All Rights Reserved.</p>
     </footer>
 
-    <!-- 3. JAVASCRIPT FOR SMOOTH TRANSITION -->
     <script>
         const video = document.getElementById('intro-video');
         const overlay = document.getElementById('intro-overlay');
 
-        // Function jo intro ko smoothly hatayegi
         function removeIntro() {
             overlay.classList.add('hide-intro');
         }
 
-        // 1. Jaise hi video poori play hokar khatam hogi
+        // 1. Jaise hi video khatam hogi
         video.onended = function() {
             removeIntro();
         };
 
-        // 2. SAFETY NET & ERROR HANDLING: 
-        // Agar video ka path galat hai ya browse load nahi kar pa raha, toh black screen nahi rukegi
-        video.onerror = function() {
-            console.log("Video load nahi ho payi, bypass kar rahe hain...");
-            removeIntro();
-        };
-
-        // Agar video atak gayi, toh 6 second baad apne aap website open ho jayegi
+        // 2. Agar internet slow ho aur video load na ho, toh 5 second baad apne aap website khul jayegi
         setTimeout(() => {
             removeIntro();
-        }, 6000); 
+        }, 5000); 
     </script>
 
 </body>
