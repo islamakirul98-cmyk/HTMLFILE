@@ -19,68 +19,68 @@
             overflow-x: hidden;
         }
 
-        /* ====== 1. ANIMATED INTRO OVERLAY (NO VIDEO REQUIRED) ====== */
+        /* ====== 1. TAGDA LOGO INTRO OVERLAY ====== */
         #intro-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background-color: #0b1528; /* Premium Dark Blue Background */
+            background-color: #000; /* Pure Black Cinematic Background */
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            animation: fadeOutIntro 0.5s ease-in forwards;
-            animation-delay: 3.5s; /* 3.5 second baad intro apne aap hat jayega */
+            cursor: pointer; /* User ko click karne ka ishara */
+            transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
         }
 
-        .intro-box {
+        /* Click Karne Ka Message */
+        #click-prompt {
+            color: #00a2ff;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: absolute;
+            animation: blink 1.2s infinite;
+            text-shadow: 0 0 10px #00a2ff;
+        }
+
+        /* Logo Content Box */
+        .logo-container {
+            display: none; /* Pehle hidden rahega, click ke baad dikhega */
             text-align: center;
         }
 
-        /* Star Animation */
-        .intro-star {
-            font-size: 80px;
-            color: #00a2ff;
-            text-shadow: 0 0 20px #00a2ff, 0 0 40px #002060;
-            display: inline-block;
-            animation: spinAndScale 1.5s ease-out forwards;
+        /* Aapka Bheja Hua Logo Image */
+        .intro-logo-img {
+            max-width: 320px;
+            width: 90%;
+            height: auto;
+            /* Logo Entry Animation */
+            animation: logoBlast 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            filter: drop-shadow(0 0 25px rgba(0, 162, 255, 0.6));
         }
 
-        /* Text Animation */
-        .intro-text {
-            color: white;
-            font-size: 42px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-top: 20px;
-            text-transform: uppercase;
+        /* Fade Out Class */
+        .hide-intro {
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUpText 1s ease-out forwards;
-            animation-delay: 1.2s;
+            visibility: hidden;
+            pointer-events: none;
         }
 
-        .intro-text span {
-            color: #00a2ff;
+        /* --- ANIMATIONS KEYFRAMES --- */
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
 
-        /* --- Keyframes For Animations --- */
-        @keyframes spinAndScale {
-            0% { transform: scale(0) rotate(0deg); opacity: 0; }
-            70% { transform: scale(1.2) rotate(380deg); opacity: 1; }
-            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+        @keyframes logoBlast {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; filter: brightness(3) drop-shadow(0 0 50px #00a2ff); }
+            50% { transform: scale(1.1) rotate(5deg); opacity: 1; filter: brightness(1.5); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
-
-        @keyframes fadeInUpText {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeOutIntro {
-            to { opacity: 0; visibility: hidden; pointer-events: none; }
-        }
-
 
         /* ====== 2. MAIN WEBSITE STYLING ====== */
         header {
@@ -212,12 +212,17 @@
 </head>
 <body>
 
-    <div id="intro-overlay">
-        <div class="intro-box">
-            <div class="intro-star">★</div>
-            <div class="intro-text">Bluestar <span>Sport</span></div>
+    <div id="intro-overlay" onclick="startIntro()">
+        <div id="click-prompt">⚡ CLICK ANYWHERE TO ENTER ⚡</div>
+        
+        <div class="logo-container" id="logo-box">
+            <img src="https://i.ibb.co/3ykbBks/1000045953.png" alt="Bluestar Sport Logo" class="intro-logo-img">
         </div>
     </div>
+
+    <audio id="intro-audio" preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-sport-start-heavy-drums-826.mp3" type="audio/mp3">
+    </audio>
 
     <header>
         <div class="logo">Bluestar <span>Sport</span></div>
@@ -258,6 +263,32 @@
     <footer>
         <p>&copy; 2026 Bluestar Sport. All Rights Reserved.</p>
     </footer>
+
+    <script>
+        let introStarted = false;
+
+        function startIntro() {
+            if (introStarted) return; // Dubara click karne par glitch na ho
+            introStarted = true;
+
+            const prompt = document.getElementById('click-prompt');
+            const logoBox = document.getElementById('logo-box');
+            const audio = document.getElementById('intro-audio');
+            const overlay = document.getElementById('intro-overlay');
+
+            // 1. Prompt hatao aur logo blast animation shuru karo
+            prompt.style.display = 'none';
+            logoBox.style.display = 'block';
+
+            // 2. Heavy Beats Gaming Music Play karo
+            audio.play().catch(error => console.log("Audio block bypass error: ", error));
+
+            // 3. Exact 4 second baad intro ko fade-out karke website open kar do
+            setTimeout(() => {
+                overlay.classList.add('hide-intro');
+            }, 4000);
+        }
+    </script>
 
 </body>
 </html>
