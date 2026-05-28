@@ -19,37 +19,72 @@
             overflow-x: hidden;
         }
 
-        /* 1. Intro Video Preloader Styling */
+        /* ====== 1. ANIMATED INTRO OVERLAY (NO VIDEO REQUIRED) ====== */
         #intro-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background-color: #000; /* Video load hone tak pure black rehga */
+            background-color: #0b1528; /* Premium Dark Blue Background */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999; /* Sabse upar dikhane ke liye */
-            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+            z-index: 9999;
+            animation: fadeOutIntro 0.5s ease-in forwards;
+            animation-delay: 3.5s; /* 3.5 second baad intro apne aap hat jayega */
         }
 
-        #intro-overlay video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Mobile aur Desktop screen par perfectly fit karega */
+        .intro-box {
+            text-align: center;
         }
 
-        /* Video khatam hone par hide karne ke liye class */
-        .hide-intro {
+        /* Star Animation */
+        .intro-star {
+            font-size: 80px;
+            color: #00a2ff;
+            text-shadow: 0 0 20px #00a2ff, 0 0 40px #002060;
+            display: inline-block;
+            animation: spinAndScale 1.5s ease-out forwards;
+        }
+
+        /* Text Animation */
+        .intro-text {
+            color: white;
+            font-size: 42px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            text-transform: uppercase;
             opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+            transform: translateY(20px);
+            animation: fadeInUpText 1s ease-out forwards;
+            animation-delay: 1.2s;
         }
 
-        /* 2. Main Website Styling */
+        .intro-text span {
+            color: #00a2ff;
+        }
+
+        /* --- Keyframes For Animations --- */
+        @keyframes spinAndScale {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            70% { transform: scale(1.2) rotate(380deg); opacity: 1; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+        }
+
+        @keyframes fadeInUpText {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOutIntro {
+            to { opacity: 0; visibility: hidden; pointer-events: none; }
+        }
+
+
+        /* ====== 2. MAIN WEBSITE STYLING ====== */
         header {
-            background-color: #002060; /* Deep Blue Theme */
+            background-color: #002060;
             color: white;
             padding: 15px 5%;
             display: flex;
@@ -68,7 +103,7 @@
         }
 
         .logo span {
-            color: #00a2ff; /* Sky Blue Highlight */
+            color: #00a2ff;
         }
 
         nav ul {
@@ -178,10 +213,10 @@
 <body>
 
     <div id="intro-overlay">
-        <video id="intro-video" autoplay muted playsinline preload="auto">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-laser-lights-background-32120-large.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+        <div class="intro-box">
+            <div class="intro-star">★</div>
+            <div class="intro-text">Bluestar <span>Sport</span></div>
+        </div>
     </div>
 
     <header>
@@ -223,25 +258,6 @@
     <footer>
         <p>&copy; 2026 Bluestar Sport. All Rights Reserved.</p>
     </footer>
-
-    <script>
-        const video = document.getElementById('intro-video');
-        const overlay = document.getElementById('intro-overlay');
-
-        function removeIntro() {
-            overlay.classList.add('hide-intro');
-        }
-
-        // 1. Jaise hi video khatam hogi
-        video.onended = function() {
-            removeIntro();
-        };
-
-        // 2. Agar internet slow ho aur video load na ho, toh 5 second baad apne aap website khul jayegi
-        setTimeout(() => {
-            removeIntro();
-        }, 5000); 
-    </script>
 
 </body>
 </html>
