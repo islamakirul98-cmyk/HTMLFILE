@@ -1,725 +1,268 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1213258409915867"
-     crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Comet Aviator</title>
-    <style>
-        :root {
-            --primary-red: #D32F2F;
-            --dark-red: #B71C1C;
-            --accent-red: #FF5252;
-            --pink-accent: #800080; /* Pink for >= 10x multipliers */
-            --bg-dark: #1A1A1A;
-            --bg-medium: #2C2C2C;
-            --text-light: #F5F5F5;
-            --text-medium: #BDBDBD;
-            --text-dark: #757575;
-            --green-accent: #4CAF50;
-            --yellow-accent: #FFC107;
-            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: var(--font-main);
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-
-        .game-wrapper {
-            background-color: var(--bg-medium);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 700px; /* Max width for the game interface */
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        h1 {
-            color: var(--primary-red);
-            text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px var(--accent-red);
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--text-dark);
-        }
-
-        #wallet-info {
-            font-size: 1.4em;
-            font-weight: bold;
-        }
-        #wallet-amount {
-            color: var(--green-accent);
-            animation: pulse 1.5s infinite alternate;
-        }
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
-        }
-
-        #reset-wallet-btn {
-            background-color: var(--yellow-accent);
-            color: var(--bg-dark);
-        }
-        #reset-wallet-btn:hover {
-            background-color: #FFD54F;
-        }
-
-        .game-area {
-            height: 200px;
-            background: linear-gradient(to bottom, #0a0a1f 0%, #1a1a38 60%, #382030 100%); /* Dark space to red horizon */
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid var(--primary-red);
-            box-shadow: inset 0 0 15px rgba(211, 47, 47, 0.5);
-        }
-
-        #sky-bg { /* Animated background */
-            position: absolute;
-            top: 0; left: 0;
-            width: 200%; /* Make it wider for seamless looping */
-            height: 100%;
-            background-image:
-                radial-gradient(white 0.5px, transparent 1px),
-                radial-gradient(white 0.5px, transparent 1px);
-            background-size: 30px 30px, 60px 60px; /* Two layers of stars */
-            background-position: 0 0, 15px 15px;
-            animation: scrollStars 60s linear infinite;
-            opacity: 0.7;
-        }
-
-        @keyframes scrollStars {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); } /* Scrolls one full width of original image */
-        }
-
-
-        #comet { /* Was #car */
-            font-size: 3em; /* Larger emoji */
-            position: absolute;
-            left: 10px;
-            bottom: 20px; /* Start near bottom */
-            transition: transform 0.3s ease-out, left 0.2s linear; /* Smoother transitions */
-            transform: translateY(0) rotate(-15deg); /* Initial angle */
-            text-shadow: 0 0 10px var(--accent-red);
-        }
-        #comet.flying {
-            transform: translateY(-30px) rotate(0deg); /* Take-off effect */
-        }
-        #comet.crashed-anim {
-            animation: shake 0.5s, fadeOutExplode 0.7s 0.3s forwards;
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0) rotate(5deg); }
-            25% { transform: translateX(-5px) rotate(-5deg); }
-            50% { transform: translateX(5px) rotate(10deg); }
-            75% { transform: translateX(-5px) rotate(-10deg); }
-        }
-        @keyframes fadeOutExplode {
-            from { opacity: 1; transform: scale(1) rotate(0deg); }
-            to { opacity: 0; transform: scale(1.5) rotate(30deg); }
-        }
-
-
-       #multiplier-display {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 3.5em;
-            font-weight: bold;
-            color: var(--text-light);
-            text-shadow: 0 0 15px var(--accent-red), 0 0 20px var(--accent-red);
-            padding: 5px 15px;
-            background-color: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            transition: transform 0.2s ease-out, color 0.2s ease-out;
-        }
-        #multiplier-display.critical {
-            color: var(--primary-green);
-            transform: translateX(-50%) scale(1);
-        }
-
-
-        .message-area {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 10;
-        }
-        .message {
-            font-size: 1.5em;
-            font-weight: bold;
-            padding: 15px 25px;
-            border-radius: 8px;
-            display: none; /* Hidden by default */
-            animation: fadeInScaleUp 0.5s ease-out forwards;
-        }
-        @keyframes fadeInScaleUp {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        #crash-message {
-            background-color: rgba(211, 47, 47, 0.9); /* Primary Red with alpha */
-            color: var(--text-light);
-            border: 2px solid var(--dark-red);
-        }
-        #cashout-message { /* This is for player's successful cashout */
-            background-color: rgba(76, 175, 80, 0.9); /* Green Accent with alpha */
-            color: var(--text-light);
-            border: 2px solid #388E3C;
-        }
-        #cashout-message #win-amount-value { color: var(--yellow-accent); }
-
-
-        .controls-area {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding: 15px;
-            background-color: #333; /* Slightly lighter than main bg for controls */
-            border-radius: 10px;
-        }
-
-        .bet-selection {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        }
-        .bet-selection span { font-weight: bold; }
-
-        button, .bet-option-btn {
-            font-size: 1em;
-            padding: 10px 18px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        button:hover, .bet-option-btn:hover {
-            transform: translateY(-2px);
-        }
-        button:active, .bet-option-btn:active {
-            transform: translateY(0px);
-        }
-
-        .bet-option-btn {
-            background-color: var(--text-dark);
-            color: var(--text-light);
-        }
-        .bet-option-btn.selected {
-            background-color: var(--primary-red);
-            color: var(--text-light);
-            box-shadow: 0 0 10px var(--accent-red);
-        }
-
-        #custom-bet-input {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--text-dark);
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            width: 100px; /* Adjusted width slightly based on your previous full code */
-            font-size: 1em;
-        }
-        #custom-bet-input:focus {
-            outline: none;
-            border-color: var(--primary-red);
-            box-shadow: 0 0 8px var(--accent-red);
-        }
-
-        #current-bet-display {
-            text-align: center;
-            font-size: 1.2em;
-            color: var(--yellow-accent);
-        }
-        #current-bet-display span { font-weight: bold; }
-
-        #place-bet-btn {
-            background-color: var(--primary-red);
-            color: var(--text-light);
-            font-size: 1.2em;
-        }
-        #place-bet-btn:disabled {
-            background-color: var(--text-dark);
-            cursor: not-allowed;
-            color: #9E9E9E;
-        }
-
-        #cashout-btn {
-            background-color: var(--green-accent);
-            color: var(--text-light);
-            font-size: 1.2em;
-            min-height: 45px; /* Added to prevent layout shift when text changes */
-        }
-        #cashout-btn:disabled {
-            background-color: var(--text-dark);
-            cursor: not-allowed;
-            color: #9E9E9E;
-        }
-
-        .history-area {
-            margin-top: 10px;
-            padding: 15px;
-            background-color: var(--bg-medium);
-            border-radius: 10px;
-        }
-        .history-area h2 {
-            text-align: center;
-            color: var(--primary-red);
-            margin-bottom: 10px;
-            font-size: 1.5em;
-        }
-        #crash-history-list {
-            list-style: none;
-            padding: 0;
-            max-height: 150px; 
-            overflow-y: auto;
-            display: flex; 
-            flex-direction: row-reverse; 
-            gap: 8px;
-            padding-bottom: 5px; 
-        }
-        #crash-history-list::-webkit-scrollbar {
-            height: 8px;
-        }
-        #crash-history-list::-webkit-scrollbar-thumb {
-            background: var(--primary-red);
-            border-radius: 4px;
-        }
-        #crash-history-list::-webkit-scrollbar-track {
-            background: var(--text-dark);
-            border-radius: 4px;
-        }
-
-        #crash-history-list li {
-            background-color: var(--bg-dark);
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-weight: bold;
-            min-width: 60px; 
-            text-align: center;
-            border: 1px solid var(--text-dark);
-            transition: transform 0.3s ease;
-        }
-        #crash-history-list li:first-child { 
-             animation: newHistoryItem 0.5s ease-out;
-        }
-        @keyframes newHistoryItem {
-            from { transform: scale(0.5); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* History item colors - order matters */
-        #crash-history-list li.bad-crash { color: var(--accent-red); } 
-        #crash-history-list li.good-crash { color: var(--green-accent); } 
-        #crash-history-list li.pink-crash { color: var(--pink-accent); }  /* For >= 10x */
-
-        footer {
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: var(--text-medium);
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blue Sky - Premium OTT Streaming & Live Sports</title>
+  <!-- Google Fonts for premium typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>🚀 Red Comet Aviator ☄️</h1>
 
-    <div class="game-wrapper">
-        <div class="top-bar">
-            <!-- Wallet amount from your HTML, JS will use INITIAL_WALLET -->
-            <div id="wallet-info">Wallet: ₹<span id="wallet-amount">500</span></div> 
-            <button id="reset-wallet-btn">Reset Wallet</button>
-        </div>
-
-        <div class="game-area">
-            <div id="sky-bg"></div>
-            <div id="comet">☄️</div>
-            <div id="multiplier-display">1.00x</div>
-            <div class="message-area">
-                <div id="crash-message" class="message">💥 CRASHED at <span id="crash-at-value">1.00</span>x! 💥</div>
-                <div id="cashout-message" class="message">
-                    Cashed out at <span id="cashout-at-value">1.00</span>x!
-                    <br>You won ₹<span id="win-amount-value">0</span>!
-                </div>
-            </div>
-        </div>
-
-        <div class="controls-area">
-            <div class="bet-selection">
-                <span>Bet:</span>
-                <button class="bet-option-btn" data-bet="10">₹10</button>
-                <button class="bet-option-btn" data-bet="50">₹50</button>
-                <button class="bet-option-btn" data-bet="100">₹100</button>
-                <button class="bet-option-btn" data-bet="200">₹200</button>
-                <button class="bet-option-btn" data-bet="500">₹500</button>
-                <button class="bet-option-btn" data-bet="1000">₹1000</button>
-
-                <input type="number" id="custom-bet-input" placeholder="Custom" min="1">
-            </div>
-            <div id="current-bet-display">Current Bet: ₹<span>0</span></div>
-            <button id="place-bet-btn">Place Bet & Launch</button>
-            <button id="cashout-btn" disabled>Cash Out!</button>
-        </div>
-
-        <div class="history-area">
-            <h2>Previous Flights</h2>
-            <ul id="crash-history-list"></ul>
-        </div>
+  <!-- ========================================== -->
+  <!-- PHASE 1: WELCOME NAME ENTRY SCREEN         -->
+  <!-- ========================================== -->
+  <div id="welcome-screen" class="welcome-screen">
+    <div class="welcome-bg-glow"></div>
+    <div class="welcome-container">
+      <div class="welcome-logo">
+        <img src="logo.svg" alt="Blue Sky Logo" id="landing-logo">
+      </div>
+      
+      <div class="welcome-card">
+        <h2>Ready to Explore?</h2>
+        <p>Enter your name to unlock unlimited streaming, movies, series, and live sports on Blue Sky.</p>
+        
+        <form id="name-form" onsubmit="event.preventDefault(); handleNameSubmit();">
+          <div class="input-group">
+            <input type="text" id="username-input" autocomplete="off" placeholder=" " required minlength="2" maxlength="20">
+            <label for="username-input">Enter Your Name</label>
+            <div class="input-glow"></div>
+          </div>
+          
+          <button type="submit" class="btn-primary" id="btn-enter">
+            <span>Start Watching</span>
+            <svg class="icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+      </div>
     </div>
+  </div>
 
-    <footer>
-        © <span id="currentYear"></span> GM Kaifu. All rights reserved.
+  <!-- ========================================== -->
+  <!-- PHASE 2: MAIN OTT DASHBOARD                -->
+  <!-- ========================================== -->
+  <div id="main-dashboard" class="main-dashboard hidden">
+    <!-- Header Navigation -->
+    <header class="main-header">
+      <div class="header-left">
+        <div class="header-logo" id="header-logo-btn">
+          <img src="logo.svg" alt="Blue Sky Logo">
+        </div>
+        <nav class="nav-menu">
+          <button class="nav-link active" data-category="all">Home</button>
+          <button class="nav-link" data-category="tv">TV Shows</button>
+          <button class="nav-link" data-category="movies">Movies</button>
+          <button class="nav-link" data-category="sports">Sports</button>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <!-- Search bar -->
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" placeholder="Search movies, shows, sports...">
+          <button id="clear-search-btn" class="clear-search hidden">&times;</button>
+        </div>
+
+        <!-- User profile display -->
+        <div class="user-profile">
+          <div class="profile-avatar" id="profile-dropdown-btn">
+            <span id="avatar-initial">U</span>
+          </div>
+          <div class="profile-info">
+            <span class="welcome-text">Welcome,</span>
+            <span class="profile-name" id="user-display-name">User</span>
+          </div>
+          
+          <!-- Dropdown menu -->
+          <div class="profile-dropdown" id="profile-dropdown-menu">
+            <div class="dropdown-header">
+              <p class="dropdown-greeting">Signing in as</p>
+              <p class="dropdown-username" id="dropdown-display-name">User</p>
+            </div>
+            <hr class="dropdown-divider">
+            <button class="dropdown-item" onclick="changeName()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="dropdown-icon">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+              Change Name
+            </button>
+            <button class="dropdown-item logout" onclick="logout()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="dropdown-icon">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Exit Application
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      
+      <!-- HERO CAROUSEL -->
+      <section class="hero-carousel-section" id="hero-carousel-container">
+        <div class="carousel-track-container">
+          <div class="carousel-track" id="carousel-track">
+            <!-- Carousel slides dynamically loaded by JavaScript -->
+          </div>
+        </div>
+        
+        <!-- Controls -->
+        <button class="carousel-btn btn-left" id="carousel-prev-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="carousel-btn btn-right" id="carousel-next-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        
+        <!-- Indicators -->
+        <div class="carousel-nav" id="carousel-indicators">
+          <!-- Dots loaded dynamically -->
+        </div>
+      </section>
+
+      <!-- RESULTS HEADER (ONLY SHOWN WHEN SEARCHING OR FILTERING) -->
+      <div id="results-header" class="results-header hidden">
+        <h2>Showing results for "<span id="search-query-text"></span>"</h2>
+        <button class="btn-text" id="reset-filters-btn">Clear Filter</button>
+      </div>
+
+      <!-- DYNAMIC ROWS CONTAINER -->
+      <div class="rows-container" id="rows-container">
+        <!-- Content rows (Sports, Movies, TV Shows) dynamically generated -->
+      </div>
+      
+    </main>
+
+    <!-- Sleek OTT Footer -->
+    <footer class="main-footer">
+      <div class="footer-links">
+        <a href="#">About Us</a>
+        <a href="#">Help Center</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="footer-copy">
+        <p>&copy; 2026 Blue Sky Streaming Service. All Rights Reserved. Recreated beautifully for you.</p>
+      </div>
     </footer>
+  </div>
 
-    <script>
-        const cometElement = document.getElementById('comet');
-        const multiplierDisplayElement = document.getElementById('multiplier-display'); // Changed from multiplierDisplay
-        const walletAmountElement = document.getElementById('wallet-amount');
-        const placeBetBtn = document.getElementById('place-bet-btn');
-        const cashoutBtn = document.getElementById('cashout-btn');
-        const resetWalletBtn = document.getElementById('reset-wallet-btn');
-        const betOptionBtns = document.querySelectorAll('.bet-option-btn');
-        const customBetInput = document.getElementById('custom-bet-input');
-        const currentBetDisplayValue = document.querySelector('#current-bet-display span');
+  <!-- ========================================== -->
+  <!-- PHASE 3: INTERACTIVE VIDEO PLAYER & MODAL   -->
+  <!-- ========================================== -->
+  <div id="detail-modal" class="modal hidden">
+    <div class="modal-backdrop" id="modal-close-backdrop"></div>
+    <div class="modal-wrapper">
+      <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+      
+      <!-- Video Player Section -->
+      <div class="modal-player-container">
+        <!-- Fake Video / Graphic Layer -->
+        <div class="video-display" id="video-display">
+          <div class="video-poster-bg" id="player-poster-bg"></div>
+          <div class="video-overlay">
+            <div class="video-loading-spinner hidden" id="video-spinner"></div>
+            <div class="play-state-overlay" id="play-state-overlay">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+            </div>
+            
+            <!-- Dynamic Info in top left of player -->
+            <div class="video-tag" id="player-tag">Blue Sky Premium</div>
+          </div>
+        </div>
+
+        <!-- Custom Video Controls -->
+        <div class="video-controls">
+          <div class="timeline-container">
+            <div class="timeline-progress" id="player-progress"></div>
+            <input type="range" class="timeline-slider" id="player-timeline" min="0" max="100" value="0">
+          </div>
+          
+          <div class="controls-row">
+            <div class="controls-left">
+              <button class="control-btn" id="player-play-btn">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="icon-play"><path d="M8 5v14l11-7z"></path></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" class="icon-pause hidden"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+              </button>
+              <button class="control-btn" id="player-skip-back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 0-7.07 2.93L2 8V2M2 8h6"></path><path d="M2.05 12.5a10 10 0 1 0 9.95-10.5"></path></svg>
+              </button>
+              <button class="control-btn" id="player-skip-forward">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 7.07 2.93L22 8V2M22 8h-6"></path><path d="M21.95 12.5A10 10 0 1 1 12 2"></path></svg>
+              </button>
+              
+              <div class="volume-container">
+                <button class="control-btn" id="player-mute-btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor" class="icon-volume"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor" class="icon-muted hidden"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"></path></svg>
+                </button>
+                <input type="range" class="volume-slider" id="player-volume" min="0" max="100" value="80">
+              </div>
+              
+              <div class="time-display">
+                <span id="player-time-current">0:00</span> / <span id="player-time-total">2:15</span>
+              </div>
+            </div>
+            
+            <div class="controls-right">
+              <button class="control-btn" id="player-fullscreen-btn">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Info Section -->
+      <div class="modal-detail-content">
+        <div class="modal-meta-row">
+          <span class="modal-rating" id="modal-rating">IMDb 8.7</span>
+          <span class="modal-year" id="modal-year">2026</span>
+          <span class="modal-duration" id="modal-duration">2h 15m</span>
+          <span class="modal-hd-badge">4K Ultra HD</span>
+          <span class="modal-cc-badge">5.1 Audio</span>
+        </div>
         
-        const crashMessageElement = document.getElementById('crash-message');
-        const cashoutMessageElement = document.getElementById('cashout-message'); // This is for player's cashout
-        const crashAtValueElement = document.getElementById('crash-at-value');
-        const cashoutAtValueElement = document.getElementById('cashout-at-value');
-        const winAmountValueElement = document.getElementById('win-amount-value');
-        const crashHistoryList = document.getElementById('crash-history-list');
+        <h1 class="modal-title" id="modal-title">Movie Title Here</h1>
+        <p class="modal-genres" id="modal-genres">Action • Thriller • Sci-Fi</p>
+        <p class="modal-description" id="modal-description">
+          A thrilling story about a group of astronauts navigating a dangerous nebula to save their home planet. Expect stellar visuals and high-stakes drama.
+        </p>
 
-        const MAX_HISTORY_ITEMS = 50;
-        const INITIAL_WALLET = 1000; // From your JS
+        <!-- Dynamic Cast List -->
+        <div class="modal-cast-section">
+          <h3>Starring:</h3>
+          <p id="modal-cast">Chris Hemsworth, Tom Hiddleston, Natalie Portman</p>
+        </div>
 
-        let wallet = INITIAL_WALLET;
-        let currentBet = 0; // Bet active in the current game round
-        let selectedBetAmount = 0; // Bet amount chosen by player for NEXT round
+        <!-- Similar Content Recommendations -->
+        <div class="similar-content-section">
+          <h3>More Like This</h3>
+          <div class="similar-grid" id="similar-grid">
+            <!-- Loaded dynamically based on item selected -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        let isGameRunning = false;
-        let hasCrashed = false; // Specific to the game round, not just player
-        let playerHasCashedOutThisTurn = false; // Specific to the player's action in this turn
-        let currentMultiplier = 1.0;
-        let targetCrashMultiplier = 0;
-        let gameInterval = null;
-
-        let visualCrashHistory = []; // Renamed from crashHistory for clarity
-
-        const playSound = (type) => {
-            console.log(`Sound: ${type}`); 
-        };
-
-        function updateWalletDisplay() {
-            walletAmountElement.textContent = Math.floor(wallet);
-        }
-
-        function updateCurrentBetDisplay() {
-            currentBetDisplayValue.textContent = selectedBetAmount;
-        }
-        
-        function selectBet(amount) {
-            if (isGameRunning) return; // Cannot change bet during an active game
-
-            selectedBetAmount = parseInt(amount);
-            if (isNaN(selectedBetAmount) || selectedBetAmount <=0) selectedBetAmount = 0;
-
-            betOptionBtns.forEach(btn => {
-                btn.classList.remove('selected');
-                // Only mark as selected if custom input isn't the source of truth, or if they match
-                if (parseInt(btn.dataset.bet) === selectedBetAmount && !customBetInput.value) {
-                    btn.classList.add('selected');
-                }
-            });
-
-            // If a preset button was clicked, clear custom input
-            if ([10,50,100,200,500,1000].includes(selectedBetAmount) && document.activeElement !== customBetInput) {
-                 customBetInput.value = ''; 
-            } else if (![10,50,100,200,500,1000].includes(selectedBetAmount) && selectedBetAmount > 0) {
-                 customBetInput.value = selectedBetAmount; // Sync custom input if value is not preset
-            }
-
-            updateCurrentBetDisplay();
-            placeBetBtn.disabled = selectedBetAmount <= 0 || selectedBetAmount > wallet;
-        }
-
-        customBetInput.addEventListener('input', (e) => {
-            if (isGameRunning) { e.target.value = currentBet > 0 ? currentBet : ''; return; } // Prevent changes during game
-            betOptionBtns.forEach(btn => btn.classList.remove('selected')); // Deselect buttons when typing custom
-            const value = parseInt(e.target.value);
-            if (!isNaN(value) && value > 0) {
-                selectBet(value);
-            } else if (e.target.value === '') { 
-                selectBet(0);
-            }
-        });
-
-        betOptionBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (isGameRunning) return;
-                customBetInput.value = ''; // Clear custom input when preset is chosen
-                selectBet(btn.dataset.bet);
-            });
-        });
-
-        resetWalletBtn.addEventListener('click', () => {
-            if (isGameRunning) return; 
-            wallet = INITIAL_WALLET;
-            selectedBetAmount = 0;
-            currentBet = 0;
-            customBetInput.value = '';
-            betOptionBtns.forEach(b => b.classList.remove('selected'));
-            updateWalletDisplay();
-            updateCurrentBetDisplay();
-            resetGameState(); // Also reset game visuals and button states
-            placeBetBtn.disabled = true; 
-            console.log("Wallet reset to " + INITIAL_WALLET);
-        });
-
-        function generateCrashPoint() { // Your function
-            const r = Math.random();
-            if (r < 0.05) return 1.00; 
-            if (r < 0.35) return parseFloat((1.01 + Math.random() * 0.98).toFixed(2)); 
-            if (r < 0.75) return parseFloat((2.00 + Math.random() * 0.99).toFixed(2)); 
-            if (r < 0.90) return parseFloat((3.00 + Math.random() * 6.99).toFixed(2)); 
-            // Corrected for the last two ranges
-            if (r < 0.95) { // This covers 0.90 to 0.9499... (5% range)
-                return parseFloat((10.00 + Math.random() * 9.99).toFixed(2)); 
-            }
-            // This covers 0.95 to 0.999... (5% range)
-            return parseFloat((20.00 + Math.random() * 80.00).toFixed(2)); 
-        }      
-
-        function resetGameState() { // Resets visual and player state for a new game
-            isGameRunning = false;
-            hasCrashed = false;
-            playerHasCashedOutThisTurn = false; // Renamed for clarity
-            currentMultiplier = 1.00;
-
-            cometElement.style.left = '10px';
-            cometElement.style.transform = 'translateY(0) rotate(-15deg)';
-            cometElement.classList.remove('flying', 'crashed-anim');
-            multiplierDisplayElement.textContent = '1.00x';
-            multiplierDisplayElement.classList.remove('critical');
-            crashMessageElement.style.display = 'none';
-            cashoutMessageElement.style.display = 'none';
-
-            // Enable betting controls if not mid-game (which it isn't if resetGameState is called)
-            placeBetBtn.disabled = selectedBetAmount <= 0 || selectedBetAmount > wallet;
-            cashoutBtn.disabled = true;
-            cashoutBtn.textContent = 'Cash Out!'; // Reset button text
-            betOptionBtns.forEach(btn => btn.disabled = false);
-            customBetInput.disabled = false;
-        }
-
-        function placeBetAndStart() {
-            if (selectedBetAmount <= 0) {
-                alert("Please select a valid bet amount.");
-                return;
-            }
-            if (selectedBetAmount > wallet) {
-                alert("Insufficient funds to place this bet.");
-                return;
-            }
-
-            resetGameState(); // Ensure clean state before starting
-
-            currentBet = selectedBetAmount; // Set the active bet for this round
-            wallet -= currentBet;
-            updateWalletDisplay();
-            playSound('bet_placed');
-
-            isGameRunning = true;
-            // hasCrashed and playerHasCashedOutThisTurn are already false from resetGameState
-            targetCrashMultiplier = generateCrashPoint();
-            
-            console.log(`Game started. Bet: ${currentBet}. Crashing at: ${targetCrashMultiplier}x`);
-
-            cometElement.classList.add('flying');
-            placeBetBtn.disabled = true;
-            cashoutBtn.disabled = false; // Enable cashout now that game is running with a bet
-            cashoutBtn.textContent = 'Cash Out!'; // Initial text, will update
-            betOptionBtns.forEach(btn => btn.disabled = true);
-            customBetInput.disabled = true;
-
-            let startTime = Date.now();
-            gameInterval = setInterval(() => {
-                if(!isGameRunning) { // Should not happen if interval is cleared properly
-                    clearInterval(gameInterval);
-                    return;
-                }
-
-                let elapsed = (Date.now() - startTime) / 1000; 
-                currentMultiplier = parseFloat((1 + elapsed * 0.1 + Math.pow(elapsed, 2) * 0.02).toFixed(2));
-                multiplierDisplayElement.textContent = `${currentMultiplier.toFixed(2)}x`;
-                
-                // ** Live Cashout Button Update **
-                if (isGameRunning && !playerHasCashedOutThisTurn && currentBet > 0) {
-                    const potentialWinnings = Math.floor(currentBet * currentMultiplier);
-                    cashoutBtn.textContent = `Cash Out ₹${potentialWinnings}`;
-                }
-                
-                const visualProgressMaxMultiplier = 10; 
-                let progressPercent = Math.min(currentMultiplier / visualProgressMaxMultiplier, 1);
-                const maxLeft = cometElement.parentElement.offsetWidth - cometElement.offsetWidth - 20; 
-                cometElement.style.left = (10 + progressPercent * maxLeft) + 'px';
-
-                // Warning visual when nearing crash, but not if already past it
-                if (currentMultiplier > targetCrashMultiplier * 0.7 && currentMultiplier < targetCrashMultiplier) { 
-                    multiplierDisplayElement.classList.add('critical');
-                } else {
-                    multiplierDisplayElement.classList.remove('critical');
-                }
-
-                if(currentMultiplier >= targetCrashMultiplier) {
-                    triggerCrash(); // This will clear the interval
-                }
-            }, 50); 
-        }
-
-        function triggerCrash() {
-            if(!isGameRunning || hasCrashed) return; // Prevent multiple crash calls for same round
-            
-            clearInterval(gameInterval); // Stop updates
-            isGameRunning = false; // Mark game as not running
-            hasCrashed = true; // Mark that this round has crashed
-            playSound('crash');
-
-            cometElement.classList.add('crashed-anim');
-            multiplierDisplayElement.textContent = `${targetCrashMultiplier.toFixed(2)}x`; 
-            multiplierDisplayElement.classList.add('critical'); // Keep it red for crash
-
-            crashAtValueElement.textContent = targetCrashMultiplier.toFixed(2);
-            crashMessageElement.style.display = 'block'; // Show the main crash message
-            
-            addCrashToHistory(targetCrashMultiplier); // Add to visual history
-            
-            // UI reset for next bet opportunity
-            cashoutBtn.disabled = true; // Cashout no longer possible
-            cashoutBtn.textContent = 'Cash Out!'; // Reset text
-            // placeBetBtn and betting options will be re-enabled after a delay
-            
-            console.log(`Crashed at ${targetCrashMultiplier.toFixed(2)}x. Bet lost: ${currentBet}`);
-            // Bet already deducted. If player didn't cash out, this is a loss.
-
-            // Delay re-enabling controls to allow user to see outcome
-            setTimeout(() => {
-                if (!isGameRunning && hasCrashed) { // Ensure it's still in a crashed state
-                    placeBetBtn.disabled = selectedBetAmount <= 0 || selectedBetAmount > wallet;
-                    betOptionBtns.forEach(btn => btn.disabled = false);
-                    customBetInput.disabled = false;
-                }
-            }, 1500); // Slightly longer delay to see message
-        }
-
-        function triggerCashOut() {
-            if(!isGameRunning || playerHasCashedOutThisTurn || hasCrashed) return; 
-
-            // Interval is NOT cleared here by player action if game is multi-stage
-            // BUT, for this single-player focused version, cashing out ENDS player's game.
-            clearInterval(gameInterval); 
-            isGameRunning = false; // Player's participation in this round ends
-            playerHasCashedOutThisTurn = true;
-            playSound('cashout_success');
-
-            const winnings = Math.floor(currentBet * currentMultiplier); // Use currentMultiplier at cashout time
-            wallet += winnings;
-            updateWalletDisplay();
-
-            cashoutAtValueElement.textContent = currentMultiplier.toFixed(2);
-            winAmountValueElement.textContent = winnings;
-            cashoutMessageElement.style.display = 'block'; // Show player's cashout message
-            
-            console.log(`Cashed out at ${currentMultiplier.toFixed(2)}x. Won: ${winnings}`);
-            
-            cashoutBtn.disabled = true;
-            cashoutBtn.textContent = 'Cashed Out!'; // Update button text
-            // For this game model, cashing out also stops the rocket for the player.
-            // So, we re-enable betting for the next round after a delay.
-            // The "actual" crash point of the round might be higher, but player is out.
-            // We can add targetCrashMultiplier to history even if player cashed out early.
-            addCrashToHistory(targetCrashMultiplier); // Still log the round's eventual crash point for history
-
-            setTimeout(() => {
-                if (!isGameRunning && playerHasCashedOutThisTurn) {
-                     placeBetBtn.disabled = selectedBetAmount <= 0 || selectedBetAmount > wallet;
-                     betOptionBtns.forEach(btn => btn.disabled = false);
-                     customBetInput.disabled = false;
-                }
-            }, 1500);
-        }
-
-        function addCrashToHistory(crashVal) {
-            visualCrashHistory.unshift(crashVal); 
-            if (visualCrashHistory.length > MAX_HISTORY_ITEMS) {
-                visualCrashHistory.pop(); 
-            }
-            renderCrashHistory();
-        }
-
-        function renderCrashHistory() {
-            crashHistoryList.innerHTML = ''; 
-            visualCrashHistory.forEach(val => {
-                const li = document.createElement('li');
-                li.textContent = `${val.toFixed(2)}x`;
-                
-                // Remove any existing color classes first to prevent conflicts
-                li.classList.remove('pink-crash', 'good-crash', 'bad-crash');
-
-                if (val >= 10.0) { // ** Pink for >= 10x **
-                    li.classList.add('pink-crash');
-                } else if (val >= 2.0) {
-                    li.classList.add('good-crash');
-                } else {
-                    li.classList.add('bad-crash');
-                }
-                crashHistoryList.appendChild(li);
-            });
-        }
-
-        placeBetBtn.addEventListener('click', placeBetAndStart);
-        cashoutBtn.addEventListener('click', triggerCashOut);
-
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-        updateWalletDisplay(); // Initialize wallet display based on INITIAL_WALLET
-        renderCrashHistory(); 
-        resetGameState(); // Set initial UI state correctly
-        selectBet(0); // Initialize bet selection, which will set placeBetBtn state
-
-        console.log("Red Comet Aviator Initialized!");
-    </script>
+  <script src="app.js"></script>
 </body>
 </html>

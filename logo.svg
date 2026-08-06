@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" width="100%" height="100%">
+  <defs>
+    <!-- Sky Gradient -->
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <!-- Star Glow -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feColorMatrix type="matrix" values="
+        1 0 0 0 0
+        0 1 0 0 0
+        0 0 1 0 0
+        0 0 0 0.5 0" />
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Curved Sweep (Arch) -->
+  <path d="M 50,85 C 100,25 350,20 420,50" 
+        fill="none" 
+        stroke="#1d9bf0" 
+        stroke-width="5" 
+        stroke-linecap="round"
+        filter="url(#glow)"/>
+        
+  <!-- The Star (8-point) -->
+  <g transform="translate(420, 50)" filter="url(#glow)">
+    <!-- Primary rays (Vertical & Horizontal) -->
+    <path d="M 0,-50 L 7,-9 L 50,0 L 7,9 L 0,50 L -7,9 L -50,0 L -7,-9 Z" fill="#1d9bf0" />
+    <!-- Secondary diagonal rays (Shorter) -->
+    <path d="M 0,-28 L 5,-7 L 28,0 L 5,7 L 0,28 L -5,7 L -28,0 L -5,-7 Z" transform="rotate(45)" fill="#60a5fa" />
+    <!-- Center core -->
+    <circle cx="0" cy="0" r="5" fill="#ffffff" />
+  </g>
+  
+  <!-- Text: Blue Sky -->
+  <g transform="translate(40, 115)">
+    <!-- "Blue" in White -->
+    <text x="0" y="0" 
+          font-family="'Outfit', 'Inter', 'Segoe UI', sans-serif" 
+          font-weight="700" 
+          font-size="72" 
+          fill="#ffffff" 
+          letter-spacing="-1">Blue</text>
+    <!-- "Sky" in Gradient -->
+    <text x="175" y="0" 
+          font-family="'Outfit', 'Inter', 'Segoe UI', sans-serif" 
+          font-weight="700" 
+          font-size="72" 
+          fill="url(#skyGrad)" 
+          letter-spacing="-1">Sky</text>
+  </g>
+</svg>
